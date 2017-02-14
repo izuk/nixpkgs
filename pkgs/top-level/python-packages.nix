@@ -32121,6 +32121,45 @@ EOF
 
   treq = callPackage ../development/python-modules/treq { };
 
+  openant = buildPythonPackage rec {
+    name = "${pname}-${version}";
+    pname = "openant";
+    version = "0.0.1-ed89281";
+    src = pkgs.fetchgit {
+      url = git://github.com/Tigge/openant.git;
+      rev = "ed89281e37f65d768641e87356cef38877952397";
+      sha256 = "1g81l9arqdy09ijswn3sp4d6i3z18d44lzyb78bwnvdb14q22k19";
+    };
+    patches = [ ../development/python-modules/openant/udev.patch ];
+    postInstall = ''
+      mkdir -p $out/etc/udev/rules.d
+      cp $src/resources/ant-usb-sticks.rules $out/etc/udev/rules.d
+    '';
+    propagatedBuildInputs = with self; [ pyusb ];
+    meta = {
+      description = "ANT and ANT-FS Python Library";
+      homepage = "https://github.com/Tigge/openant";
+      license = licenses.mit;
+    };
+  };
+
+  antfs-cli = buildPythonPackage rec {
+    name = "${pname}-${version}";
+    pname = "antfs-cli";
+    version = "0.0.1-85a6cc6";
+    src = pkgs.fetchgit {
+      url = git://github.com/Tigge/antfs-cli.git;
+      rev = "85a6cc6fe6fc0ec38399f5aa30fb39177c565b52";
+      sha256 = "0v8y64kldfbs809j1g9d75dd1vxq7mfxnp4b45pz8anpxhjf64fy";
+    };
+    propagatedBuildInputs = with self; [ openant ];
+    meta = {
+      description = "Extracts FIT files from ANT-FS based sport watches";
+      homepage = "https://github.com/Tigge/antfs-cli";
+      license = licenses.mit;
+    };
+  };
+
 });
 
 in fix' (extends overrides packages)
