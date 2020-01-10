@@ -111,6 +111,8 @@ in stdenv.mkDerivation rec {
     "--with-storage-disk"
   ] ++ optionals (stdenv.isLinux && zfs != null) [
     "--with-storage-zfs"
+  ] ++ optionals (stdenv.isLinux && ebtables.version > "2.0.10-4") [
+    "EBTABLES_PATH=${ebtables}/bin/ebtables-legacy"
   ] ++ optionals enableIscsi [
     "--with-storage-iscsi"
   ] ++ optionals enableCeph [
